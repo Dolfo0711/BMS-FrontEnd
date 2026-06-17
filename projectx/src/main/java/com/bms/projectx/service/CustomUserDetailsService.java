@@ -1,4 +1,4 @@
-package com.bms.projectx.services;
+package com.bms.projectx.service;
 
 import com.bms.projectx.config.CustomUserDetails;
 import com.bms.projectx.entity.UserEntity;
