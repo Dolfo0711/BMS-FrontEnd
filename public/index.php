@@ -16,8 +16,12 @@
 }
 
 body {
-    background: #0f172a;
-    color:white;
+    background-image: url('../img/4.jpg');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    color: white;
 }
 
 /* HEADER */
@@ -79,6 +83,7 @@ nav a:hover {
 
 .hero h1 {
     font-size:50px;
+   color: #0561D0;
     margin-bottom:10px;
 }
 
@@ -175,7 +180,7 @@ footer {
 <body>
 
 <header>
-<img src="../img/school_logo.jpg" class="logo-img">
+<img src="../img/x.jpg" class="logo-img">
     <nav>
         <ul>
             <li><a href="#">Home</a></li>
@@ -189,7 +194,7 @@ footer {
 <!-- HERO -->
 <section class="hero">
 
-<img src="../img/school_logo.jpg" class="logo-img">
+<img src="../img/x.jpg" class="logo-img">
     <h1>Welcome to Pinnacle Technology Incorporation</h1>
 
     <p>
