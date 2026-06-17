@@ -2,7 +2,7 @@ package com.bms.projectx.controller;
 
 import com.bms.projectx.entity.UserEntity;
 import com.bms.projectx.repository.UserRepository;
-import com.bms.projectx.services.JwtService;
+import com.bms.projectx.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

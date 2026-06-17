@@ -1,6 +1,6 @@
 package com.bms.projectx.config;
-import com.bms.projectx.services.CustomUserDetailsService;
-import com.bms.projectx.services.JwtService;
+import com.bms.projectx.service.CustomUserDetailsService;
+import com.bms.projectx.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
