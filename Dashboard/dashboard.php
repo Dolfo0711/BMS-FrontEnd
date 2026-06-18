@@ -16,7 +16,7 @@ body{
 }
 
 .header{
-    background:#007bff;
+    background:#076D48;
     color:white;
     padding:20px;
     text-align:center;
@@ -93,6 +93,29 @@ body{
 .logout:hover{
     background:darkred;
 }
+
+.attendance-action{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:40px 0;
+}
+
+.timein-btn{
+    background:#076D48;
+    color:white;
+    text-decoration:none;
+    padding:20px 60px;
+    font-size:24px;
+    font-weight:bold;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.timein-btn:hover{
+    background:#055c3c;
+    transform:scale(1.05);
+}
 </style>
 </head>
 
@@ -116,6 +139,13 @@ body{
 
     <div class="content">
         <h2>Welcome to the BMS Dashboard</h2>
+        <div class="attendance-action">
+    <form action="/BMS/attendance/attendance.php" method="POST">
+        <button type="submit" class="timein-btn">
+            Time In
+        </button>
+    </form>
+</div>
         <br>
 
         <div class="cards">
@@ -145,7 +175,7 @@ body{
             </div>
         </div>
 
-        <a href="login.php" class="logout">Logout</a>
+        <a href="http://localhost/BMS/public/login.php" class="logout">Logout</a>
     </div>
 
 </div>

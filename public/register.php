@@ -1,4 +1,11 @@
-<?php
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><?php
+
+$registrationSuccess = false;
+$errorMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -13,12 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "lastName"  => $last_name,
         "email"     => $email,
         "birthdate" => $birthdate,
-        "password"  => $password
+        "password"  => $password,
+        "role" => "USER"
     ];
 
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/api/auth/register");
+    curl_setopt($ch, CURLOPT_URL, "https://projectx-n2d1.onrender.com/api/auth/register");
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -28,24 +36,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ]);
 
     $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     if (curl_errno($ch)) {
-        echo "Error: " . curl_error($ch);
+        $errorMessage = curl_error($ch);
     } else {
-        echo $response;
+
+        if ($httpCode == 200 || $httpCode == 201) {
+            $registrationSuccess = true;
+        } else {
+            $errorMessage = $response;
+        }
+
     }
 
     curl_close($ch);
-
-} // <-- close the POST block
-
+}
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
 <title>Register</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -58,6 +65,59 @@ body {
     background: linear-gradient(135deg,#0f172a,#1e293b);
 }
 
+/* MODAL */
+
+.modal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.7);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-content {
+    width:400px;
+    background:white;
+    color:#333;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,.3);
+}
+
+.modal-content h3 {
+    margin-top:0;
+    color:#16a34a;
+}
+
+.modal-btn {
+    margin-top:15px;
+    padding:12px 20px;
+    background:#4f46e5;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.modal-btn:hover {
+    background:#3730a3;
+}
+
+.error-msg {
+    background:#dc2626;
+    color:white;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    text-align:center;
+}
 /* LEFT */
 .left {
     flex:1;
@@ -165,6 +225,60 @@ a {
     transform:scale(1.03);
 }
 
+/* MODAL */
+
+.modal {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.7);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-content {
+    width:400px;
+    background:white;
+    color:#333;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,.3);
+}
+
+.modal-content h3 {
+    margin-top:0;
+    color:#16a34a;
+}
+
+.modal-btn {
+    margin-top:15px;
+    padding:12px 20px;
+    background:#4f46e5;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.modal-btn:hover {
+    background:#3730a3;
+}
+
+.error-msg {
+    background:#dc2626;
+    color:white;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    text-align:center;
+}
+
 
 </style>
 </head>
@@ -184,6 +298,12 @@ a {
 
         <h2>Register</h2>
 
+
+        <?php if(!empty($errorMessage)): ?>
+        <div class="error-msg">
+            <?php echo htmlspecialchars($errorMessage); ?>
+        </div>
+        <?php endif; ?>
 
        <form method="POST" action="">
 
@@ -208,6 +328,28 @@ a {
     </div>
 
 </div>
+
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <h3>✅ Registration Successful</h3>
+
+        <p>
+            Your account has been created successfully.
+        </p>
+
+        <button class="modal-btn" onclick="window.location.href='login.php'">
+            Proceed to Login
+        </button>
+    </div>
+</div>
+
+<?php if($registrationSuccess): ?>
+<script>
+window.onload = function() {
+    document.getElementById("successModal").style.display = "flex";
+};
+</script>
+<?php endif; ?>
 
 </body>
 </html>

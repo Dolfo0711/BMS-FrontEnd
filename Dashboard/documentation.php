@@ -10,7 +10,19 @@
 
 <!-- Sidebar -->
 <div style="width:220px;height:100vh;background:#2f3640;color:white;position:fixed;">
-    <h3 style="text-align:center;padding:15px 0;border-bottom:1px solid #444;">BMS</h3>
+   <a href="dashboard.php"
+   style="
+      display:block;
+      text-align:center;
+      padding:15px 0;
+      border-bottom:1px solid #444;
+      color:white;
+      text-decoration:none;
+      font-size:20px;
+      font-weight:bold;
+   ">
+   BMS
+</a>
     <a href="attendance_monitoring.php" style="display:block;padding:12px;color:white;text-decoration:none;">Attendance Monitoring</a>
     <a href="asset_management.php" style="display:block;padding:12px;color:white;text-decoration:none;">Asset Management</a>
     <a href="user_management.php" style="display:block;padding:12px;color:white;text-decoration:none;">User Management</a>

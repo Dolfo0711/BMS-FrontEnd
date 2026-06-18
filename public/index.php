@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QARI - Smart System</title>
+<title>BMS Sample Website</title>
 
 <style>
 * {
@@ -232,7 +232,7 @@ footer {
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="register.php">Register</a></li>
-            <li><a href="login.php =">Login</a></li>
+            <li><a href="login.php">Login</a></li>
             <li><a href="https://web.facebook.com/jayr.dolfo" target="_blank" rel="noopener noreferrer">Contact</a></li>
         </ul>
     </nav>
