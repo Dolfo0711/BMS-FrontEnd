@@ -91,15 +91,22 @@ color: #3b82f6;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: 800;
-    letter-spacing: -0.025em;
+    letter-spacing: -1px;
     line-height: 1.2;
-    max-width: 850px;
-    margin-bottom: 16px;
-    background: linear-gradient(to right, #ffffff, #cbd5e1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    max-width: 900px;
+    margin-bottom: 20px;
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 10px rgba(34,197,94,0.8),
+        0 0 20px rgba(34,197,94,0.7),
+        0 0 40px rgba(34,197,94,0.6),
+        0 0 80px rgba(34,197,94,0.5);
+
+    animation: glowText 2s ease-in-out infinite alternate;
 }
 
 .hero p {
@@ -193,6 +200,22 @@ footer {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-12px); }
 }
+@keyframes glowText {
+    from {
+        text-shadow:
+            0 0 10px rgba(34,197,94,0.8),
+            0 0 20px rgba(34,197,94,0.6),
+            0 0 40px rgba(34,197,94,0.5);
+    }
+
+    to {
+        text-shadow:
+            0 0 20px rgba(34,197,94,1),
+            0 0 40px rgba(34,197,94,0.9),
+            0 0 80px rgba(34,197,94,0.8),
+            0 0 120px rgba(34,197,94,0.6);
+    }
+}
 
 /* RESPONSIVE */
 @media(max-width: 768px){
@@ -220,6 +243,60 @@ footer {
         padding: 60px 24px;
         gap: 20px;
     }
+
+    .hero-content{
+    background: rgba(15,23,42,0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    padding: 50px;
+    border-radius: 24px;
+
+    box-shadow:
+        0 0 30px rgba(34,197,94,0.15),
+        0 0 80px rgba(34,197,94,0.08);
+
+    max-width: 900px;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:radial-gradient(circle,
+        rgba(34,197,94,0.35),
+        transparent 70%);
+    top:-150px;
+    right:-100px;
+    filter:blur(50px);
+    animation: floatGlow 6s ease-in-out infinite;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:400px;
+    height:400px;
+    background:radial-gradient(circle,
+        rgba(59,130,246,0.25),
+        transparent 70%);
+    bottom:-120px;
+    left:-100px;
+    filter:blur(60px);
+    animation: floatGlow 8s ease-in-out infinite reverse;
+}
+
+@keyframes floatGlow{
+    0%,100%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-30px);
+    }
+}
 }
 </style>
 
@@ -240,15 +317,26 @@ footer {
 
 <!-- FIRST SECTION (Hero Section with Background Image) -->
 <section class="hero">
-    <img src="https://lh5.googleusercontent.com/proxy/9G0O0VHzwTmXePbIc0MI0pVcw9MklZKB_kfDA8NFZTh8rpwaXNCcAI0DyoBrakfB9pw476DpxcgHhOY1" class="logo-img" alt="Pinnacle Logo">
-    <h1>Welcome to Pinnacle Technology Incorporation</h1>
-    <p>
-        An intelligent system for real-time monitoring,
-        user management, and smart appointment handling.
-    </p>
-    <button onclick="document.getElementById('info').scrollIntoView({behavior:'smooth'})">
-        Explore More
-    </button>
+
+    <div class="hero-content">
+
+        <img src="https://lh5.googleusercontent.com/proxy/9G0O0VHzwTmXePbIc0MI0pVcw9MklZKB_kfDA8NFZTh8rpwaXNCcAI0DyoBrakfB9pw476DpxcgHhOY1"
+             class="logo-img"
+             alt="Pinnacle Logo">
+
+        <h1>Welcome to Pinnacle Technology Incorporation</h1>
+
+        <p>
+            An intelligent system for real-time monitoring,
+            user management, and smart appointment handling.
+        </p>
+
+        <button onclick="document.getElementById('info').scrollIntoView({behavior:'smooth'})">
+            Explore More
+        </button>
+
+    </div>
+
 </section>
 
 <!-- SECOND SECTION (Clean info cards grid on dark slate fallback body background) -->

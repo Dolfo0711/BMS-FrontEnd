@@ -136,15 +136,14 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
     
 :root{
-    --bg:#f5f7fb;         /* light background */
-    --card:#ffffff;       /* white cards */
-    --card2:#f1f5f9;      /* light header rows */
-    --text:#1f2937;       /* dark text */
-    --muted:#6b7280;      /* soft gray */
+    --bg:#0f172a;
+    --card:#111827;
+    --card2:#1f2937;
+    --text:#e5e7eb;
+    --muted:#9ca3af;
     --accent:#10b981;
     --danger:#ef4444;
     --warning:#f59e0b;
-    --border:#e5e7eb;
 }
 
 /* BODY */
@@ -171,7 +170,7 @@ body{
 
 .card{
     background:var(--card);
-    border:1px solid var(--border);
+    border:1px solid #1f2937;
     border-radius:14px;
     padding:18px;
     transition:.2s;
@@ -211,7 +210,7 @@ body{
 .drop-zone{
     flex:1;
     padding:18px;
-    border:2px dashed #cbd5e1;
+    border:2px dashed #334155;
     border-radius:14px;
     text-align:center;
     color:var(--muted);
@@ -222,7 +221,6 @@ body{
 
 .drop-zone:hover{
     border-color:var(--accent);
-    background:#f8fafc;
     color:var(--text);
 }
 
@@ -249,7 +247,7 @@ body{
 /* TABLE CARD */
 .table-card{
     background:var(--card);
-    border:1px solid var(--border);
+    border:1px solid #1f2937;
     border-radius:14px;
     padding:15px;
     overflow:hidden;
@@ -262,7 +260,7 @@ table.dataTable{
 
 table.dataTable thead{
     background:var(--card2);
-    color:var(--text);
+    color:#fff;
 }
 
 table.dataTable tbody tr{
@@ -270,7 +268,7 @@ table.dataTable tbody tr{
 }
 
 table.dataTable tbody tr:hover{
-    background:#f3f4f6;
+    background:#0b2a22;
 }
 
 /* IMAGE */
@@ -334,35 +332,6 @@ input{
     border-radius:12px;
     border:1px solid #1f2937;
     color:#e5e7eb;
-}
-
-.dt-button-collection{
-    background:#111827 !important;
-    border:1px solid #1f2937 !important;
-    border-radius:12px !important;
-    overflow:hidden;
-}
-
-.dt-button{
-    background:#0f172a !important;
-    color:#e5e7eb !important;
-    border:none !important;
-    padding:10px 14px !important;
-    text-align:left !important;
-}
-
-.dt-button:hover{
-    background:#0b2a22 !important;
-    color:#10b981 !important;
-}
-
-.buttons-collection{
-    background:#10b981 !important;
-    color:#fff !important;
-    border:none !important;
-    padding:10px 16px !important;
-    border-radius:10px !important;
-    font-weight:600;
 }
 
 .status-filter select{
@@ -538,7 +507,39 @@ include '../sidebar.php';
 </div>
 
 <script>
-
+$(document).ready(function () {
+    $('#myTable').DataTable({
+        pageLength: 7,
+        lengthMenu: [5, 10, 25, 50],
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'collection',
+                text: '⬇ Action',
+                autoClose: true,
+                buttons: [
+                    {
+                        extend: 'csv',
+                        text: 'Export CSV'
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Export Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Export PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print Table'
+                    }
+                ]
+            }
+        ]
+    });
+});
 
 
 $(document).ready(function () {
@@ -549,19 +550,18 @@ $(document).ready(function () {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-    {
-        extend: 'collection',
-        text: '⬇ Actions',
-        className: 'export-btn',
-        autoClose: true,
-        buttons: [
-            { extend: 'csv', text: 'Download CSV' },
-            { extend: 'excel', text: 'Download Excel' },
-            { extend: 'pdf', text: 'Download PDF' },
-            { extend: 'print', text: 'Print Table' }
+            {
+                extend: 'collection',
+                text: '⬇ Export',
+                autoClose: true,
+                buttons: [
+                    { extend: 'csv', text: 'CSV' },
+                    { extend: 'excel', text: 'Excel' },
+                    { extend: 'pdf', text: 'PDF' },
+                    { extend: 'print', text: 'Print' }
+                ]
+            }
         ]
-    }
-]
     });
 
     // STATUS FILTER

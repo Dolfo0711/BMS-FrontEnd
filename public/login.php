@@ -1,7 +1,13 @@
-
 <?php
-
 session_start();
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 0;
+}
+
+if (!isset($_SESSION['last_attempt'])) {
+    $_SESSION['last_attempt'] = time();
+}
+
 
 $error = "";
 
@@ -29,306 +35,319 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    // ❗ IMPORTANT: capture curl error
     if (curl_errno($ch)) {
         $error = "Curl Error: " . curl_error($ch);
         curl_close($ch);
     } else {
         curl_close($ch);
 
-        // DEBUG OUTPUT (REMOVE LATER)
-        // echo $response; exit();
-
         if ($httpCode == 200) {
 
-            $user = json_decode($response, true);
+    $user = json_decode($response, true);
 
-            $_SESSION['user'] = $user;
+    // Check if role exists
+    $userRole = strtoupper($user['role'] ?? '');
 
-            header("Location: ../Dashboard/dashboard.php");
-            exit();
+    if ($userRole !== 'ADMIN') {
+        $error = "Access denied. Administrator account required.";
+        session_destroy();
+    } else {
 
-        } else {
+        // Regenerate session ID (prevents session fixation)
+        session_regenerate_id(true);
 
-            // SHOW REAL ERROR FROM BACKEND
+        $_SESSION['user'] = $user;
+        $_SESSION['logged_in'] = true;
+        $_SESSION['role'] = $userRole;
+
+        header("Location: ../Dashboard/dashboard.php");
+        exit();
+    }
+}else {
             $error = "Login failed: " . $response;
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-{
+:root{
+    --primary:#076D48;
+    --primary2:#11b978;
+    --bg:#0b1220;
+    --card:#ffffff;
+    --muted:#64748b;
+}
+
+*{
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:'Inter',sans-serif;
 }
 
 body{
-    font-family:'Segoe UI',sans-serif;
     min-height:100vh;
-    background:#eef2f7;
+    background: linear-gradient(135deg,#eef2f7,#e6edf5);
 }
 
+/* LAYOUT */
 .container{
     display:flex;
     min-height:100vh;
 }
 
-/* LEFT LOGIN */
-
+/* LEFT */
 .login-section{
-    width:40%;
+    width:42%;
     display:flex;
     justify-content:center;
     align-items:center;
-    background:white;
-    padding:40px;
+    padding:48px;
+    background:rgba(255,255,255,.6);
+    backdrop-filter: blur(10px);
 }
 
 .login-card{
     width:100%;
-    max-width:420px;
+    max-width:440px;
+    padding:40px;
+    border-radius:20px;
+    background:white;
+    box-shadow:0 20px 60px rgba(15,23,42,.12);
 }
 
+/* LOGO */
 .logo{
-    font-size:30px;
+    font-size:22px;
     font-weight:700;
-    color:#076D48;
-    margin-bottom:15px;
+    color:var(--primary);
+    margin-bottom:16px;
 }
 
-.login-card h1{
-    font-size:36px;
-    color:#1e293b;
-    margin-bottom:10px;
+/* TEXT */
+h1{
+    font-size:32px;
+    color:#0f172a;
+    margin-bottom:8px;
 }
 
 .subtitle{
-    color:#64748b;
-    margin-bottom:35px;
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:28px;
     line-height:1.6;
 }
 
-/* INPUTS */
-
-.input-group{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    background:#f8fafc;
-    border:2px solid transparent;
-    border-radius:14px;
-    padding:14px 16px;
+/* INPUTS (FLOATING STYLE) */
+.field{
+    position:relative;
     margin-bottom:18px;
-    transition:.3s;
 }
 
-.input-group:focus-within{
-    border-color:#076D48;
-    background:white;
-}
-
-.input-group span{
-    font-size:18px;
-}
-
-.input-group input{
-    border:none;
-    outline:none;
+.field input{
     width:100%;
-    background:transparent;
-    font-size:15px;
+    padding:16px 14px;
+    border-radius:14px;
+    border:1px solid #e2e8f0;
+    outline:none;
+    font-size:14px;
+    transition:.25s;
+    background:#f8fafc;
+}
+
+.field label{
+    position:absolute;
+    left:12px;
+    top:14px;
+    color:#94a3b8;
+    font-size:13px;
+    pointer-events:none;
+    transition:.2s;
+    background:white;
+    padding:0 6px;
+}
+
+.field input:focus{
+    border-color:var(--primary);
+    background:white;
+    box-shadow:0 0 0 4px rgba(7,109,72,.08);
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{
+    top:-8px;
+    font-size:11px;
+    color:var(--primary);
 }
 
 /* BUTTON */
-
 .login-btn{
     width:100%;
+    padding:14px;
     border:none;
-    padding:15px;
     border-radius:14px;
-    background:linear-gradient(
-        135deg,
-        #076D48,
-        #11b978
-    );
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
     color:white;
-    font-size:15px;
     font-weight:600;
     cursor:pointer;
-    transition:.3s;
+    transition:.25s;
+    margin-top:8px;
 }
 
 .login-btn:hover{
     transform:translateY(-2px);
-    box-shadow:0 12px 25px rgba(7,109,72,.25);
+    box-shadow:0 14px 30px rgba(7,109,72,.25);
 }
 
 /* LINKS */
-
 .links{
-    margin-top:20px;
+    margin-top:18px;
     display:flex;
     justify-content:space-between;
+    font-size:13px;
 }
 
 .links a{
+    color:var(--primary);
     text-decoration:none;
-    color:#076D48;
     font-weight:600;
 }
 
 /* ERROR */
-
 .error{
     background:#fee2e2;
-    color:#dc2626;
+    color:#b91c1c;
     padding:12px;
-    border-radius:10px;
-    margin-bottom:20px;
+    border-radius:12px;
+    margin-bottom:16px;
+    font-size:13px;
 }
 
-/* RIGHT HERO */
-
+/* RIGHT SIDE */
 .hero-section{
-    width:60%;
-    background:linear-gradient(
-        135deg,
-        #003D52,
-        #076D48
-    );
+    width:58%;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#003D52,#076D48);
     color:white;
-    padding:50px;
+    padding:60px;
     position:relative;
     overflow:hidden;
 }
 
-.hero-section::before{
+/* DECOR */
+.hero-section::before,
+.hero-section::after{
     content:'';
     position:absolute;
-    width:700px;
-    height:700px;
-    background:rgba(255,255,255,.05);
     border-radius:50%;
-    top:-300px;
-    right:-200px;
+    background:rgba(255,255,255,.06);
+}
+
+.hero-section::before{
+    width:500px;
+    height:500px;
+    top:-200px;
+    right:-150px;
+}
+
+.hero-section::after{
+    width:300px;
+    height:300px;
+    bottom:-100px;
+    left:-100px;
 }
 
 .hero-content{
-    max-width:650px;
     text-align:center;
+    max-width:600px;
     z-index:2;
 }
 
 .hero-content h2{
-    font-size:48px;
-    margin-bottom:20px;
+    font-size:42px;
+    margin-bottom:14px;
 }
 
 .hero-content p{
-    font-size:18px;
     opacity:.9;
+    font-size:16px;
     line-height:1.7;
-    margin-bottom:40px;
+    margin-bottom:30px;
 }
 
 .hero-content img{
     width:100%;
-    max-width:550px;
-    animation:float 4s ease-in-out infinite;
+    max-width:520px;
+    animation:float 5s ease-in-out infinite;
 }
 
 @keyframes float{
-    0%,100%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-15px);
-    }
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
 }
 
 /* MOBILE */
-
 @media(max-width:900px){
-
-    .container{
-        flex-direction:column;
-    }
-
-    .hero-section{
-        display:none;
-    }
-
-    .login-section{
-        width:100%;
-    }
+    .container{flex-direction:column;}
+    .hero-section{display:none;}
+    .login-section{width:100%;}
+    .login-card{box-shadow:none;}
 }
-
 </style>
+</head>
+
 <body>
 
 <div class="container">
 
-    <!-- LEFT SIDE -->
+    <!-- LEFT -->
     <div class="login-section">
 
         <div class="login-card">
 
-            <div class="logo">
-                🏢 DJT
-            </div>
+            <div class="logo">🏢 DJT System</div>
 
             <h1>Welcome Back</h1>
             <p class="subtitle">
-                Sign in to access your Building Management Dashboard.
+                Sign in to manage your building operations, tenants, payments, and reports.
             </p>
 
             <?php if (!empty($error)): ?>
-                <div class="error">
-                    <?= htmlspecialchars($error) ?>
-                </div>
+                <div class="error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
             <form method="POST">
 
-                <div class="input-group">
-                    <span>📧</span>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email Address"
-                        required
-                    >
+                <div class="field">
+                    <input type="email" name="email" placeholder=" " required>
+                    <label>Email Address</label>
                 </div>
 
-                <div class="input-group">
-                    <span>🔒</span>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Password"
-                        required
-                    >
+                <div class="field">
+                    <input type="password" name="password" placeholder=" " required>
+                    <label>Password</label>
                 </div>
 
-                <button type="submit" class="login-btn">
+                <button class="login-btn" type="submit">
                     Sign In
                 </button>
 
             </form>
 
             <div class="links">
-                <a href="index.php">← Back to Home</a>
+                <a href="index.php">← Back</a>
                 <a href="register.php">Create Account</a>
             </div>
 
@@ -336,7 +355,7 @@ body{
 
     </div>
 
-    <!-- RIGHT SIDE -->
+    <!-- RIGHT -->
     <div class="hero-section">
 
         <div class="hero-content">
@@ -344,15 +363,11 @@ body{
             <h2>Building Management System</h2>
 
             <p>
-                Manage tenants, rooms, payments,
-                maintenance requests and reports
-                all in one place.
+                A centralized dashboard for monitoring tenants, assets,
+                maintenance requests, and operational reports in real time.
             </p>
 
-            <img
-                src="assets/building-dashboard.png"
-                alt="Dashboard Illustration"
-            >
+            <img src="assets/building-dashboard.png" alt="Dashboard">
 
         </div>
 
@@ -361,3 +376,4 @@ body{
 </div>
 
 </body>
+</html>

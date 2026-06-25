@@ -288,7 +288,7 @@ a {
 <div class="left">
     <div>
         <h1>Join Us</h1>
-        <p>Create your account to start booking appointments.</p>
+        <p>Create your account and be with us.</p>
     </div>
 </div>
 

@@ -1,52 +1,24 @@
-<?php ?>
+<?php
+include '../auth.php';
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>BMS Components</title>
 </head>
-<body style="margin:0;font-family:Arial;background:#f4f6f9;">
 
-<body style="margin:0;font-family:Arial;background:#f4f6f9;">
 
-<!-- Sidebar -->
-<div style="width:220px;height:100vh;background:#2f3640;color:white;position:fixed;">
-    <a href="dashboard.php"
-   style="
-      display:block;
-      text-align:center;
-      padding:15px 0;
-      border-bottom:1px solid #444;
-      color:white;
-      text-decoration:none;
-      font-size:20px;
-      font-weight:bold;
-   ">
-   BMS
-</a>
-    <a href="attendance_monitoring.php" style="display:block;padding:12px;color:white;text-decoration:none;">Attendance Monitoring</a>
-    <a href="asset_management.php" style="display:block;padding:12px;color:white;text-decoration:none;">Asset Management</a>
-    <a href="user_management.php" style="display:block;padding:12px;color:white;text-decoration:none;">User Management</a>
-    <a href="documentation.php" style="display:block;padding:12px;color:white;text-decoration:none;">Documentation</a>
-    <a href="bms_components.php" style="display:block;padding:12px;color:white;text-decoration:none;">BMS Components</a>
-</div>
+<body>
 
-<div style="margin-left:220px;padding:20px;">
-    <h2>BMS Components</h2>
+<?php
+$activePage = "components";
+include '../sidebar.php';
+?>
 
-    <div style="display:flex;gap:15px;">
-        <div style="background:white;padding:15px;width:200px;">
-            HVAC System
-        </div>
 
-        <div style="background:white;padding:15px;width:200px;">
-            Security System
-        </div>
 
-        <div style="background:white;padding:15px;width:200px;">
-            Electrical Grid
-        </div>
-    </div>
-</div>
+
 
 </body>
 </html>
